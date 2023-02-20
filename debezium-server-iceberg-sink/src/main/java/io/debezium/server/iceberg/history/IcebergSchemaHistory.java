@@ -246,6 +246,7 @@ public final class IcebergSchemaHistory extends AbstractDatabaseHistory {
       }
     } else {
       LOG.debug("Storage is exists, skipping initialization");
+      historyTable = icebergCatalog.loadTable(tableId); // FIXME : aiyer to avoid NPE
     }
   }
 

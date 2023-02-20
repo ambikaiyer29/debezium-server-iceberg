@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.Timestamp;
+import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -146,7 +147,7 @@ public class IcebergOffsetBackingStore extends MemoryOffsetBackingStore implemen
       Timestamp currentTs = new Timestamp(System.currentTimeMillis());
 
       GenericRecord record = GenericRecord.create(OFFSET_STORAGE_TABLE_SCHEMA);
-      Record row = record.copy("id", UUID.randomUUID().toString(), "offset_data", "record_insert_ts", dataJson, currentTs);
+      Record row = record.copy("id", UUID.randomUUID().toString(), "offset_data", dataJson,"record_insert_ts", currentTs.toInstant().atOffset(ZoneOffset.UTC));
       OutputFile out;
       try (FileIO tableIo = offsetTable.io()) {
         out = tableIo.newOutputFile(offsetTable.locationProvider().newDataLocation(tableId.name() + "-data-001"));
